@@ -146,12 +146,12 @@ export class Poster {
     let metadata = snapshot.data().metadata;
 
     if (!metadata || !metadata.status) {
-      await this.updateMetadata(snapshot, { status: "unprocessed" });
-      metadata.status = "unprocessed";
+      await this.setMetaData(snapshot, { status: "unprocessed" });
+      metadata = { status: "unprocessed" }
     }
 
     if (metadata && metadata.status === "unprocessed") {
-      await this.updateMetadata(snapshot, { status: "pending" });
+      await this.setMetaData(snapshot, { status: "pending" });
 
       const body = this.extractBody(snapshot);
       const currentVersion = metadata?.currentVersion || 0;
@@ -167,13 +167,13 @@ export class Poster {
           if (shouldUpdate) {
             const { output, currentVersion } = transformedData;
             await this.updateDocument(snapshot, output);
-            await this.updateMetadata(snapshot, { currentVersion, status: "processed" });
+            await this.setMetaData(snapshot, { currentVersion, status: "processed" });
           }
           return;
         }
 
         await this.updateDocument(snapshot, data);
-        await this.updateMetadata(snapshot, { status: "processed" });
+        await this.setMetaData(snapshot, { status: "processed" });
 
         return;
       } catch (err) {
@@ -194,14 +194,14 @@ export class Poster {
     this.logs.updateDocumentComplete(snapshot.ref.path);
   }
 
-  protected async updateMetadata(
+  protected async setMetaData(
     snapshot: admin.firestore.DocumentSnapshot,
     metadata: any
   ): Promise<void> {
     // this.logs.updateDocument(snapshot.ref.path);
     // Wrapping in transaction to allow for automatic retries (#48)
     await admin.firestore().runTransaction((transaction) => {
-      transaction.update(snapshot.ref, "metadata", metadata);
+      transaction.set(snapshot.ref, { metadata }, { merge: true });
       return Promise.resolve();
     });
     // this.logs.updateDocumentComplete(snapshot.ref.path);
