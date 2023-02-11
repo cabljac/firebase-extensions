@@ -143,38 +143,34 @@ export class Poster {
   protected async processSnapshot(
     snapshot: admin.firestore.DocumentSnapshot
   ): Promise<void> {
-    let metadata = snapshot.data().metadata;
+    let output = snapshot.data().output;
 
-    if (!metadata || !metadata.status) {
-      await this.setMetaData(snapshot, { status: "unprocessed" });
-      metadata = { status: "unprocessed" }
+    let shouldProcess = !output;
+
+
+    if (this.template) {
+      await this.template?.waitUntilReady();
+
+      const templateVersion = this.template.version;
+      const currentVersion = snapshot.data().currentVersion;
+
+      shouldProcess = shouldUpdate(templateVersion, currentVersion);
     }
 
-    if (metadata && metadata.status === "unprocessed") {
-      await this.setMetaData(snapshot, { status: "pending" });
-
+    if (shouldProcess) {
       const body = this.extractBody(snapshot);
-      const currentVersion = metadata?.currentVersion || 0;
-
       try {
         const response = await this.instance.post(this.apiUrl, body);
 
         const data = config.responseField ? response.data[config.responseField] : response.data;
 
         if (this.template) {
-          const { data: transformedData, shouldUpdate } = await this.template.render({ data, currentVersion });
-
-          if (shouldUpdate) {
-            const { output, currentVersion } = transformedData;
-            await this.updateDocument(snapshot, output);
-            await this.setMetaData(snapshot, { currentVersion, status: "processed" });
-          }
+          const { data: transformedData } = await this.template.render({ data });
+          await this.updateDocument(snapshot, transformedData);
           return;
         }
 
         await this.updateDocument(snapshot, data);
-        await this.setMetaData(snapshot, { status: "processed" });
-
         return;
       } catch (err) {
         logs.error(err);
@@ -184,26 +180,27 @@ export class Poster {
 
   protected async updateDocument(
     snapshot: admin.firestore.DocumentSnapshot,
-    output: any
+    data: any
   ): Promise<void> {
     // Wrapping in transaction to allow for automatic retries (#48)
     await admin.firestore().runTransaction((transaction) => {
-      transaction.update(snapshot.ref, this.outputFieldName, output);
+      transaction.update(snapshot.ref, this.outputFieldName, data.output);
+      transaction.update(snapshot.ref, "currentVersion", data.currentVersion);
       return Promise.resolve();
     });
     this.logs.updateDocumentComplete(snapshot.ref.path);
   }
+}
 
-  protected async setMetaData(
-    snapshot: admin.firestore.DocumentSnapshot,
-    metadata: any
-  ): Promise<void> {
-    // this.logs.updateDocument(snapshot.ref.path);
-    // Wrapping in transaction to allow for automatic retries (#48)
-    await admin.firestore().runTransaction((transaction) => {
-      transaction.set(snapshot.ref, { metadata }, { merge: true });
-      return Promise.resolve();
-    });
-    // this.logs.updateDocumentComplete(snapshot.ref.path);
+function shouldUpdate(templateVersion: number, docVersion: number) {
+  switch (config.updatedTemplateStrategy) {
+    case "always":
+      return true;
+    case "never":
+      return false;
+    case "ifNewer":
+      return templateVersion > docVersion;
+    default:
+      return false;
   }
 }

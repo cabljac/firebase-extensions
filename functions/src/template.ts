@@ -28,6 +28,7 @@ export default class Template {
   private templateData: TemplateData;
   private ready: boolean;
   private waits: (() => void)[];
+  public version: number;
 
   constructor(collection: admin.firestore.DocumentReference) {
     this.document = collection;
@@ -36,7 +37,7 @@ export default class Template {
     this.waits = [];
   }
 
-  private waitUntilReady(): Promise<void> {
+  waitUntilReady(): Promise<void> {
     if (this.ready) {
       return Promise.resolve();
     }
@@ -52,6 +53,7 @@ export default class Template {
     const data = snap.data();
 
     this.templateData = data;
+    this.version = data.version;
 
     this.ready = true;
     this.waits.forEach((wait) => wait());
@@ -59,12 +61,11 @@ export default class Template {
 
   checkTemplateExists = async () => {
     const snap = await this.document.get();
-    return snap.exists;
+    return snap.data().exists;
   };
 
   async render({
     data,
-    currentVersion,
   }: {
     data: any;
     currentVersion?: number;
@@ -89,22 +90,7 @@ export default class Template {
       data: {
         output: JSON.parse(Mustache.render(JSON.stringify(template), data)),
         currentVersion: version,
-      },
-      shouldUpdate: shouldUpdateDoc(version, currentVersion),
+      }
     };
-  }
-}
-
-
-function shouldUpdateDoc(templateVersion: number, docVersion: number) {
-  switch (config.updatedTemplateStrategy) {
-    case "always":
-      return true;
-    case "never":
-      return false;
-    case "ifNewer":
-      return templateVersion > docVersion;
-    default:
-      return false;
   }
 }

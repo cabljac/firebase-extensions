@@ -65,10 +65,7 @@ describe("test123", () => {
     expect(data).toEqual({
       input: { foo: "bar" },
       output: { templateFoo: "bar" },
-      metadata: {
-        status: "processed",
-        currentVersion: 1,
-      },
+      currentVersion: 1,
     });
     // wait for file to be uploaded to storage:
   }, 12000);
