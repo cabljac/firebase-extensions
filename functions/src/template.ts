@@ -16,7 +16,7 @@
 
 import * as admin from "firebase-admin";
 import * as Mustache from "mustache";
-import config from "./config";
+import presets from "./presets";
 
 interface TemplateData {
   template: object;
@@ -24,17 +24,30 @@ interface TemplateData {
 }
 
 export default class Template {
-  document: admin.firestore.DocumentReference;
+  document?: admin.firestore.DocumentReference;
   private templateData: TemplateData;
   private ready: boolean;
   private waits: (() => void)[];
   public version: number;
 
-  constructor(collection: admin.firestore.DocumentReference) {
-    this.document = collection;
-    this.document.onSnapshot(this.updateTemplates.bind(this));
-    this.ready = false;
-    this.waits = [];
+  constructor({ document, preset }: { document?: admin.firestore.DocumentReference, preset?: string }) {
+    if (preset) {
+      this.templateData = {
+        template: presets[preset].template,
+        version: 0,
+      };
+      this.version = 0;
+      this.ready = true;
+      this.waits = [];
+      return;
+    } else if (document) {
+      this.document = document;
+      this.document.onSnapshot(this.updateTemplates.bind(this));
+      this.ready = false;
+      this.waits = [];
+    } else {
+      throw new Error("No template source provided");
+    }
   }
 
   waitUntilReady(): Promise<void> {

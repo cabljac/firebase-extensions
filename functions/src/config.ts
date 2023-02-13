@@ -24,4 +24,5 @@ export default {
   templatePath: process.env.TEMPLATE_PATH,
   responseField: process.env.RESPONSE_FIELD,
   updatedTemplateStrategy: process.env.UPDATED_TEMPLATE_STRATEGY,
+  preset: process.env.PRESET_NAME,
 };

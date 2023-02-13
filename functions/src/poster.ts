@@ -44,8 +44,10 @@ export class Poster {
     this.outputFieldName = outputFieldName;
     // Initialize the Firebase Admin SDK
     admin.initializeApp();
-    if (config.templatePath) {
-      this.template = new Template(admin.firestore().doc(config.templatePath));
+    if (config.preset !== "none") {
+      this.template = new Template({ preset: config.preset });
+    } else if (config.templatePath) {
+      this.template = new Template({ document: admin.firestore().doc(config.templatePath) });
     }
     this.apiUrl = apiURL;
     this.instance = Axios.create({

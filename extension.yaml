@@ -172,3 +172,16 @@ params:
         value: ifNewer
     default: never
     required: true
+
+  - param: PRESET_NAME
+    label: Preset name
+    description: >
+      Instead of setting up a custom API_URL and template, pick from a selection of presets (this will override custom options)
+    type: select
+    options:
+      - label: None
+        value: none
+      - label: HttpBin
+        value: httpbin
+    default: none
+    required: true
