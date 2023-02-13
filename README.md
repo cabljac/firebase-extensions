@@ -23,21 +23,7 @@ If the original non-processed field of the document is updated, then the output 
 
 #### Versioning templates and update strategy
 
-To translate multiple fields, store a map of input strings in the input field:
-
-```js
-admin.firestore().collection('translations').add({
-  first: "My name is Bob",
-  second: "Hello, friend"
-})
-```
-#### Multiple languages
-
-To translate text into multiple languages, set the `languages` parameter to a comma-separated list
-of languages, such as `en,fr,de`. See the [supported languages list](https://cloud.google.com/translate/docs/languages).
-#### Additional setup
-
-Before installing this extension, make sure that you've [set up a Cloud Firestore database](https://firebase.google.com/docs/firestore/quickstart) in your Firebase project.
+(to be added)
 
 #### Billing
 To install an extension, your project must be on the [Blaze (pay as you go) plan](https://firebase.google.com/pricing)
