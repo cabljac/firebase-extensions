@@ -1,6 +1,6 @@
 # Firestore Post Request
 
-**Author**: Firebase (**[https://firebase.google.com](https://firebase.google.com)**)
+**Author**: Jacob Cable - [github.com/cabljac](https://github.com/cabljac)
 
 **Description**: Post data written to firestore to a specified API, transform the response and write it back to firestore
 
