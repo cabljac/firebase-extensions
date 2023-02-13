@@ -48,6 +48,17 @@ resources:
         eventType: providers/cloud.firestore/eventTypes/document.write
         resource: projects/${param:PROJECT_ID}/databases/(default)/documents/${param:COLLECTION_PATH}/{documentId}
 
+  - name: firestorePostRequestBackfill
+    type: firebaseextensions.v1beta.function
+    description:
+     Searches your specified Cloud Firestore collection for existing unprocessed documents or documents with an older template version, processes the input field data,
+      then writes the processed strings back to the same document.
+    properties:
+      location: ${param:LOCATION}
+      runtime: nodejs14
+      availableMemoryMb: 1024
+      timeout: 540s
+      taskQueueTrigger: {}
 params:
   - param: LOCATION
     label: Cloud Functions location
@@ -185,3 +196,15 @@ params:
         value: httpbin
     default: none
     required: true
+
+  - param: DO_BACKFILL
+    label: Process existing documents?
+    description: >
+      Should existing documents in the Firestore collection be processed as well? 
+    type: select
+    required: true
+    options:
+      - label: Yes
+        value: true
+      - label: No
+        value: false

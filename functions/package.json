@@ -10,7 +10,9 @@
     "clean": "rimraf lib",
     "compile": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-readme": "firebase ext:info .. --markdown > ../README.md"
+    "generate-readme": "firebase ext:info .. --markdown > ../README.md",
+    "format": "prettier --write \"**/*.{js,md,yml,ts,json,yaml}\"",
+    "lint": "prettier --check \"**/*.{js,md,yml,ts,json,yaml}\""
   },
   "dependencies": {
     "@types/express-serve-static-core": "4.17.30",
@@ -27,6 +29,8 @@
   "private": true,
   "devDependencies": {
     "@types/mustache": "^4.2.2",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "eslint": "^8.34.0",
+    "prettier": "^2.8.4"
   }
 }

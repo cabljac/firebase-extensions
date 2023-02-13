@@ -25,4 +25,5 @@ export default {
   responseField: process.env.RESPONSE_FIELD,
   updatedTemplateStrategy: process.env.UPDATED_TEMPLATE_STRATEGY,
   preset: process.env.PRESET_NAME,
+  doBackfill: process.env.DO_BACKFILL,
 };

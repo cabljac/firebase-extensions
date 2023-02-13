@@ -30,7 +30,13 @@ export default class Template {
   private waits: (() => void)[];
   public version: number;
 
-  constructor({ document, preset }: { document?: admin.firestore.DocumentReference, preset?: string }) {
+  constructor({
+    document,
+    preset,
+  }: {
+    document?: admin.firestore.DocumentReference;
+    preset?: string;
+  }) {
     if (preset) {
       this.templateData = {
         template: presets[preset].template,
@@ -77,12 +83,7 @@ export default class Template {
     return snap.data().exists;
   };
 
-  async render({
-    data,
-  }: {
-    data: any;
-    currentVersion?: number;
-  }): Promise<any> {
+  async render({ data }: { data: any; currentVersion?: number }): Promise<any> {
     await this.waitUntilReady();
 
     if (!this.templateData) {
@@ -103,7 +104,7 @@ export default class Template {
       data: {
         output: JSON.parse(Mustache.render(JSON.stringify(template), data)),
         currentVersion: version,
-      }
+      },
     };
   }
 }

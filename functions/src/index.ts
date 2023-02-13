@@ -30,3 +30,9 @@ export const firestorePostRequest = functions.firestore
   .onWrite(async (change) => {
     return poster.onDocumentWrite(change);
   });
+
+export const firestorePostRequestBackfill = functions.tasks
+  .taskQueue()
+  .onDispatch(async (data: any) => {
+    return poster.onDispatch(data);
+  });

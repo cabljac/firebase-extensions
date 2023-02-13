@@ -42,19 +42,17 @@ describe("test123", () => {
 
   test("should process doc", async () => {
     const col = firestore.collection("example");
-    const templateDoc = firestore.doc("templates/1")
-    const docRef = firestore.doc("example/testststs")
-
+    const templateDoc = firestore.doc("templates/1");
+    const docRef = firestore.doc("example/testststs");
 
     templateDoc.set({
       version: 1,
       template: {
         templateFoo: "{{json.foo}}",
-      }
-    })
+      },
+    });
 
     await waitForDocField(firestore, "templates/1", "version");
-
 
     const doc = await col.add({ input: { foo: "bar" } });
 
