@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 export default {
-  httpbin: {
+  httpBin: {
     url: "http://httpbin.org",
     template: {
       templateFoo: "{{json.foo}}",
     },
   },
+  tinyUrl: {
+    url: "api.tinyurl.com/create",
+    template: {
+      shortUrl: "{{data.tiny_url}}"
+    }
+  }
 };

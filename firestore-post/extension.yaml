@@ -193,7 +193,9 @@ params:
       - label: None
         value: none
       - label: HttpBin
-        value: httpbin
+        value: httpBin
+      - label: tinyUrl
+        value: tinyUrl
     default: none
     required: true
 

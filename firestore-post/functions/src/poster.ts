@@ -22,6 +22,7 @@ import config from "./config";
 import * as logs from "./logs";
 import Template from "./template";
 import { getFunctions } from "firebase-admin/functions";
+import presets from "./presets";
 
 enum ChangeType {
   CREATE,
@@ -47,14 +48,19 @@ export class Poster {
     this.outputFieldName = outputFieldName;
     // Initialize the Firebase Admin SDK
     admin.initializeApp();
+
+    this.apiUrl = apiURL;
+
+
     if (config.preset !== "none") {
       this.template = new Template({ preset: config.preset });
+      this.apiUrl = presets[config.preset].url;
     } else if (config.templatePath) {
       this.template = new Template({
         document: admin.firestore().doc(config.templatePath),
       });
     }
-    this.apiUrl = apiURL;
+
     this.instance = Axios.create({
       headers: {
         Authorization: `Bearer ${bearerAccessToken}`,
@@ -101,7 +107,7 @@ export class Poster {
       await runtime.setProcessingState(
         "PROCESSING_COMPLETE",
         'Existing documents were not processed because "Process existing documents?" is configured to false. ' +
-          "If you want to fill in missing translations, reconfigure this instance."
+        "If you want to fill in missing translations, reconfigure this instance."
       );
       return;
     }
@@ -155,22 +161,19 @@ export class Poster {
       if (newErrorCount == 0) {
         return await runtime.setProcessingState(
           "PROCESSING_COMPLETE",
-          `Successfully processed ${newSucessCount} documents in ${
-            Date.now() - startTime
+          `Successfully processed ${newSucessCount} documents in ${Date.now() - startTime
           }ms.`
         );
       } else if (newErrorCount > 0 && newSucessCount > 0) {
         return await runtime.setProcessingState(
           "PROCESSING_WARNING",
-          `Successfully processed ${newSucessCount} documents, ${newErrorCount} errors in ${
-            Date.now() - startTime
+          `Successfully processed ${newSucessCount} documents, ${newErrorCount} errors in ${Date.now() - startTime
           }ms. See function logs for specific error messages.`
         );
       }
       return await runtime.setProcessingState(
         "PROCESSING_FAILED",
-        `Successfully processed ${newSucessCount} documents, ${newErrorCount} errors in ${
-          Date.now() - startTime
+        `Successfully processed ${newSucessCount} documents, ${newErrorCount} errors in ${Date.now() - startTime
         }ms. See function logs for specific error messages.`
       );
     }
@@ -302,7 +305,7 @@ export class Poster {
 
       shouldProcess = shouldUpdate(templateVersion, currentVersion);
     }
-
+    console.log('test', shouldProcess)
     if (shouldProcess) {
       const body = this.extractBody(snapshot);
       try {
@@ -311,6 +314,8 @@ export class Poster {
         const data = config.responseField
           ? response.data[config.responseField]
           : response.data;
+
+        console.log('DATA>>>', data)
 
         if (this.template) {
           const { data: transformedData } = await this.template.render({

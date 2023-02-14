@@ -22,7 +22,7 @@ const poster = new Poster(
   config.inputFieldName,
   config.outputFieldName,
   config.bearerAccessToken,
-  config.apiURL
+  config.preset !== "none" ? config.apiURL : undefined
 );
 
 export const firestorePostRequest = functions.firestore

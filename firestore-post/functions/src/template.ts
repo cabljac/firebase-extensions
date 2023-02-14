@@ -25,7 +25,7 @@ interface TemplateData {
 
 export default class Template {
   document?: admin.firestore.DocumentReference;
-  private templateData: TemplateData;
+  public templateData: TemplateData;
   private ready: boolean;
   private waits: (() => void)[];
   public version: number;
@@ -42,6 +42,8 @@ export default class Template {
         template: presets[preset].template,
         version: 0,
       };
+
+      console.log('PRESET TEMPLATE', this.templateData)
       this.version = 0;
       this.ready = true;
       this.waits = [];
