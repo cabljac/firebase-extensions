@@ -1,6 +1,6 @@
 {
   "extensions": {
-    "firestore-post": ".."
+    "firestore-post": "../firestore-post"
   },
   "storage": {
     "rules": "storage.rules"

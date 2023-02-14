@@ -1,0 +1,16 @@
+{
+  "name": "extensions",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:cabljac/firestore-post.git",
+  "author": "<jacobcable94@gmail.com>",
+  "license": "Apache-2.0",
+  "workspaces": [
+    "firestore-post/functions",
+    "_emulator/functions"
+  ],
+  "private": true,
+  "dependencies": {
+    "firebase-admin": "^11.5.0"
+  }
+}
