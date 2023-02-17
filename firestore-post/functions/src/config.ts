@@ -15,11 +15,11 @@
  */
 
 export default {
-  bearerAccessToken: process.env.BITLY_ACCESS_TOKEN,
+  bearerAccessToken: process.env.BEARER_ACCESS_TOKEN,
   collectionPath: process.env.COLLECTION_PATH,
   location: process.env.LOCATION,
-  outputFieldName: process.env.OUTPUT_FIELD_NAME || 'output',
-  inputFieldName: process.env.INPUT_FIELD_NAME || 'input',
+  outputFieldName: process.env.OUTPUT_FIELD_NAME || "output",
+  inputFieldName: process.env.INPUT_FIELD_NAME || "input",
   apiURL: process.env.API_URL,
   templatePath: process.env.TEMPLATE_PATH,
   responseField: process.env.RESPONSE_FIELD,

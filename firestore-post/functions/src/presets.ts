@@ -21,9 +21,9 @@ export default {
     },
   },
   tinyUrl: {
-    url: "api.tinyurl.com/create",
+    url: "https://api.tinyurl.com/create",
     template: {
-      shortUrl: "{{data.tiny_url}}"
-    }
-  }
+      shortUrl: "{{data.tiny_url}}",
+    },
+  },
 };

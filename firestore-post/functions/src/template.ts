@@ -43,7 +43,7 @@ export default class Template {
         version: 0,
       };
 
-      console.log('PRESET TEMPLATE', this.templateData)
+      console.log("PRESET TEMPLATE", this.templateData);
       this.version = 0;
       this.ready = true;
       this.waits = [];
