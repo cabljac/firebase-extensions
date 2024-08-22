@@ -9,6 +9,11 @@ export const ConfigSchema = z
         message: "API_URL must start with 'https://'."
       }),
     API_KEY: z.string().nonempty("API_KEY is required and cannot be empty."),
+    ENFORCE_AUTH: z
+      .enum(["yes", "no"])
+      .default("yes")
+      .describe("ENFORCE_AUTH should be either 'yes' or 'no'.")
+      .transform((value) => value === "yes"),
     ENFORCE_APP_CHECK: z
       .enum(["yes", "no"])
       .default("no")

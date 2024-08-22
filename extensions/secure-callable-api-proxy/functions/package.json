@@ -1,5 +1,5 @@
 {
-  "name": "callable-proxy",
+  "name": "secure-callable-api-proxy",
   "version": "0.0.0-development",
   "author": "Jacob Cable <jacobcable94@gmail.com>",
   "license": "Apache-2.0",
@@ -10,8 +10,8 @@
     "node": ">=18",
     "pnpm": ">=9.6.0"
   },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "clean:build": "rimraf ./dist",

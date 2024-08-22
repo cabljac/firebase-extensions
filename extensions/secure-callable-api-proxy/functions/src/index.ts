@@ -1,7 +1,7 @@
 import * as functions from "firebase-functions";
 import { initializeApp } from "firebase-admin";
 import { fetchFromApi } from "./fetchFromApi";
-import { ApiProxyRequest } from "./schema";
+import type { ApiProxyRequest } from "./schema";
 import { getFetchOptions } from "./getFetchOptions";
 import { ConfigSchema } from "./schema";
 
@@ -11,11 +11,20 @@ const config = ConfigSchema.parse(process.env);
 // Initialize Firebase Admin
 initializeApp();
 
-export const apiProxy = functions
+export const apiproxy = functions
   .region(config.LOCATION)
   .https.onCall(
     async (data: ApiProxyRequest, context: functions.https.CallableContext) => {
       try {
+        // Enforce Firebase Auth if enabled
+        if (config.ENFORCE_AUTH) {
+          if (!context.auth) {
+            throw new functions.https.HttpsError(
+              "unauthenticated",
+              "Request is unauthenticated."
+            );
+          }
+        }
         // Enforce Firebase App Check if enabled
         if (config.ENFORCE_APP_CHECK) {
           enforceAppCheck(context);
@@ -27,7 +36,7 @@ export const apiProxy = functions
           config.CONFIG_DOCUMENT_PATH
         );
 
-        const apiUrl = config.API_KEY;
+        const apiUrl = config.API_URL;
 
         const apiResponse = await fetchFromApi(
           apiUrl,

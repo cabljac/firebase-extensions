@@ -1,6 +1,7 @@
 # Generated files
 node_modules
 dist
+lib
 .DS_Store
 
 # Typescript
@@ -17,3 +18,4 @@ coverage
 # Env files
 .env*
 !.env.example
+**/*.secret.local

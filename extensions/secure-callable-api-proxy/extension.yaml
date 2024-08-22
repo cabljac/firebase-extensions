@@ -1,18 +1,17 @@
 # Learn detailed information about the fields of an extension.yaml file in the docs:
 # https://firebase.google.com/docs/extensions/alpha/ref-extension-yaml
 
-name: secure-api-proxy # Identifier for your extension
+name: secure-callable-api-proxy # Identifier for your extension
 version: 0.0.1 # Follow semver versioning
 specVersion: v1beta # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
 displayName: Secure API Proxy
 
-# Brief description of the task your extension performs (~1 sentence)
 description: >-
   Deploys a secure backend callable function to Firebase to proxy an API endpoint, protecting your API key and preventing resource abuse, optionally secured by Firebase App Check.
 
-license: Apache-2.0 # https://spdx.org/licenses/
+license: Apache-2.0
 
 tags:
   [api-proxy, secure-backend, firebase-functions, app-check, cloud-functions]
@@ -26,15 +25,15 @@ contributors:
     url: https://github.com/cabljac
 
 # Public URL for the source code of your extension
-sourceUrl: https://github.com/your-repo/firebase-extensions/tree/main/api-proxy-backend
-releaseNotesUrl: https://github.com/your-repo/firebase-extensions/tree/main/api-proxy-backend/CHANGELOG.md
+sourceUrl: https://github.com/cabljac/firebase-extensions/tree/main/extensions/secure-callable-api-proxy
+releaseNotesUrl: https://github.com/your-repo/firebase-extensions/tree/extensions/secure-callable-api-proxy/api-proxy-backend/CHANGELOG.md
 
 # Specify whether a paid-tier billing plan is required to use your extension.
 billingRequired: true
 
 # In the `resources` field, list each of your extension's functions, including the trigger for each function.
 resources:
-  - name: apiProxy
+  - name: apiproxy
     type: firebaseextensions.v1beta.function
     description: >-
       HTTP endpoint that proxies HTTP requests to the specified API, secured by App Check if enabled.
@@ -108,10 +107,30 @@ params:
     type: secret
     required: true
 
+  - param: CONFIG_DOCUMENT_PATH
+    label: Config Document Path
+    description: >-
+      Path to the Firestore document that contains a configuration document for the API proxy. See the PREINSTALL.md for more information.
+    type: string
+    required: false
+
+  - param: ENFORCE_AUTH
+    label: Enforce Authentication
+    description: >-
+      Should the extension enforce Firebase Authentication for function calls? Defaults to yes.
+    type: select
+    options:
+      - label: Yes
+        value: yes
+      - label: No
+        value: no
+    default: yes
+    required: true
+
   - param: ENFORCE_APP_CHECK
     label: Enforce App Check
     description: >-
-      If enabled, App Check will be enforced for function calls to ensure only authorized apps can make requests.
+      Should the extension enforce App Check for function calls to ensure only authorized apps can make requests? Defaults to no.
     type: select
     options:
       - label: Yes
@@ -120,17 +139,16 @@ params:
         value: no
     default: no
     required: true
+# # Event types that your extension emits - TODO
+# events:
+#   - type: firebase.extensions.api-proxy-backend.v1.onStart
+#     description: Occurs when any of the extension's functions receive a request.
 
-# Event types that your extension emits
-events:
-  - type: firebase.extensions.api-proxy-backend.v1.onStart
-    description: Occurs when any of the extension's functions receive a request.
+#   - type: firebase.extensions.api-proxy-backend.v1.onRequest
+#     description: Occurs when the extension attempts to proxy a request to the target API.
 
-  - type: firebase.extensions.api-proxy-backend.v1.onRequest
-    description: Occurs when the extension attempts to proxy a request to the target API.
+#   - type: firebase.extensions.api-proxy-backend.v1.onResponse
+#     description: Occurs when the extension successfully receives a response from the target API.
 
-  - type: firebase.extensions.api-proxy-backend.v1.onResponse
-    description: Occurs when the extension successfully receives a response from the target API.
-
-  - type: firebase.extensions.api-proxy-backend.v1.onError
-    description: Occurs when the extension fails to complete execution due to an error.
+#   - type: firebase.extensions.api-proxy-backend.v1.onError
+#     description: Occurs when the extension fails to complete execution due to an error.

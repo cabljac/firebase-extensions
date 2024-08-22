@@ -54,10 +54,6 @@ importers:
         specifier: ^4.9.5
         version: 4.9.5
 
-  _emulator/functions: {}
-
-  extensions/callable-proxy/functions: {}
-
   extensions/secure-callable-api-proxy/functions:
     dependencies:
       firebase-admin:
@@ -5187,7 +5183,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.19.45
+      '@types/node': 22.4.1
       long: 5.2.3
 
   proxy-addr@2.0.7:
