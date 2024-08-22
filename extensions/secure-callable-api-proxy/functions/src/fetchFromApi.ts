@@ -1,15 +1,26 @@
 export async function fetchFromApi(
   url: string,
   method: string,
-  apiKey?: string,
   headers: Record<string, string> = {},
+  apiKeyStrategy?: "header" | "query",
+  apiKeyHeaderOrQueryParam?: string,
+  apiKey?: string,
   body?: string | Record<string, unknown> | null
 ): Promise<unknown> {
   // Initialize the headers object
-  const finalHeaders: Record<string, string> = {
-    ...headers,
-    ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {})
-  };
+  const finalHeaders: Record<string, string> = { ...headers };
+
+  // Handle API key according to the strategy
+  if (apiKey && apiKeyHeaderOrQueryParam) {
+    if (apiKeyStrategy === "header") {
+      finalHeaders[apiKeyHeaderOrQueryParam] = apiKey;
+    } else if (apiKeyStrategy === "query") {
+      // Append the API key as a query parameter
+      const urlObj = new URL(url);
+      urlObj.searchParams.append(apiKeyHeaderOrQueryParam, apiKey);
+      url = urlObj.toString();
+    }
+  }
 
   // Initialize the request object
   const request: RequestInit = {

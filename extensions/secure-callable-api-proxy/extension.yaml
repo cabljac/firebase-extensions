@@ -100,12 +100,72 @@ params:
     type: string
     required: true
 
+  - param: API_KEY_STRATEGY
+    label: API Key Strategy
+    description: >-
+      How should the extension handle the API key? If not specified, the extension will not attempt to add an API key to requests.
+    type: select
+    options:
+      - label: Custom Request Header
+        value: header
+      - label: Query Parameter
+        value: query
+    default: header
+    required: true
+
+  - param: API_KEY_HEADER_OR_QUERY_PARAM
+    label: API Key Header or Query Parameter
+    description: >-
+      The name of the header or query parameter to add the API key to when making requests to the target. If not specified, the extension will not attempt to add an API key to requests.
+    type: string
+    example: X-API-Key (if using a header) or api_key (if using a query parameter)
+    required: false
+
   - param: API_KEY
     label: API Key
     description: >-
-      API key to be used when making requests to the target API.
+      API key to be used when making requests to the target API. This will be added as a Bearer token in the Authorization header.
     type: secret
-    required: true
+    required: false
+
+  - param: HTTP_METHOD
+    label: HTTP Method
+    description: >-
+      The HTTP method to use when making requests to the target API. Choose from GET, POST, PUT, PATCH, DELETE, HEAD, or OPTIONS.
+    type: select
+    options:
+      - label: GET
+        value: GET
+      - label: POST
+        value: POST
+      - label: PUT
+        value: PUT
+      - label: PATCH
+        value: PATCH
+      - label: DELETE
+        value: DELETE
+      - label: HEAD
+        value: HEAD
+      - label: OPTIONS
+        value: OPTIONS
+    default: GET
+    required: false
+
+  - param: HTTP_HEADERS
+    label: HTTP Headers
+    description: >-
+      A stringified JSON object specifying custom headers to include in the HTTP requests made by the extension. Each header should be a key-value pair, where the key is the header name and the value is the header value.
+    type: string
+    example: '{"X-Custom-Header": "value", "Another-Header": "another-value"}'
+    required: false
+
+  - param: HTTP_BODY
+    label: HTTP Body
+    description: >-
+      The body content to include in the HTTP requests made by the extension. This should be a valid JSON string.
+    type: string
+    example: '{"key1": "value1", "key2": "value2"}'
+    required: false
 
   - param: CONFIG_DOCUMENT_PATH
     label: Config Document Path

@@ -29,6 +29,12 @@ The extension requires the following configuration parameters:
 
 - **Enforce App Check (`ENFORCE_APP_CHECK`)**: Specifies whether App Check should be enforced for function calls to ensure that only authorized apps can make requests. The default value is "No."
 
+- **HTTP Method (HTTP_METHOD)**: The HTTP method to use when making requests to the target API. Options include GET, POST, PUT, PATCH, DELETE, HEAD, and OPTIONS. The default value is "GET."
+
+- **HTTP Headers (HTTP_HEADERS)**: A stringified JSON object specifying custom headers to include in the HTTP requests made by the extension. Each header should be a key-value pair, where the key is the header name and the value is the header value.
+
+- **HTTP Body (HTTP_BODY)**: The body content to include in the HTTP requests made by the extension. This should be a valid JSON string.
+
 ## Advanced usage: Config Document Path
 
 The optional parameter `Config Document Path` specifies the path to a Firestore document that contains configuration settings for the API proxy. The configuration document allows you to dynamically define the request structure and behavior for the proxy without reconfiguring the extension.

@@ -8,7 +8,18 @@ export const ConfigSchema = z
       .refine((url) => url.startsWith("https://"), {
         message: "API_URL must start with 'https://'."
       }),
-    API_KEY: z.string().nonempty("API_KEY is required and cannot be empty."),
+    API_KEY_STRATEGY: z
+      .enum(["header", "query"])
+      .default("header")
+      .describe("API_KEY_STRATEGY should be either 'header' or 'query'."),
+    API_KEY_HEADER_OR_QUERY_PARAM: z
+      .string()
+      .optional()
+      .describe("Name of the header or query parameter for the API key."),
+    API_KEY: z
+      .string()
+      .optional()
+      .describe("API_KEY is optional and can be empty."),
     ENFORCE_AUTH: z
       .enum(["yes", "no"])
       .default("yes")
@@ -19,7 +30,10 @@ export const ConfigSchema = z
       .default("no")
       .describe("ENFORCE_APP_CHECK should be either 'yes' or 'no'.")
       .transform((value) => value === "yes"),
-    LOCATION: z.string().default("us-central1"),
+    LOCATION: z
+      .string()
+      .default("us-central1")
+      .describe("Cloud Functions location."),
     HTTP_HEADERS: z
       .string()
       .default("{}")
@@ -48,7 +62,10 @@ export const ConfigSchema = z
     HTTP_METHOD: z
       .enum(["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"])
       .default("GET"),
-    CONFIG_DOCUMENT_PATH: z.string().optional()
+    CONFIG_DOCUMENT_PATH: z
+      .string()
+      .optional()
+      .describe("Path to the Firestore document containing the configuration.")
   })
   .passthrough();
 

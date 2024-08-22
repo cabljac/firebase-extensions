@@ -41,8 +41,10 @@ export const apiproxy = functions
         const apiResponse = await fetchFromApi(
           apiUrl,
           fetchOptions.httpMethod || "GET",
-          fetchOptions.body ? JSON.stringify(fetchOptions.body) : undefined,
-          fetchOptions.headers
+          fetchOptions.headers,
+          config.API_KEY_STRATEGY,
+          config.API_KEY_HEADER_OR_QUERY_PARAM,
+          fetchOptions.body ? JSON.stringify(fetchOptions.body) : undefined
         );
 
         return { data: apiResponse };

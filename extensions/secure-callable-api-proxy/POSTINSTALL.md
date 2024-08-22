@@ -20,9 +20,7 @@ const functions = getFunctions();
 const callApiProxy = httpsCallable(functions, 'apiproxy');
 
 callApiProxy({ 
-  endpoint: 'your-endpoint-path', 
-  method: 'GET or POST', 
-  body: { key: 'value' } 
+    ...
 })
 .then((result) => {
   console.log(result.data);
